@@ -21,13 +21,15 @@ def main():
     args = parser.parse_args()
 
     with SikRadio(port=args.port, baudrate=args.baudrate) as radio:
+        idx = 0
         while True:
             now = dt.datetime.now()
             radio.write(now.isoformat().encode() + b"\r\n")
             line = radio.readline()
             rx_time = dt.datetime.fromisoformat(line.strip().decode())
             delay = (rx_time - now).total_seconds()
-            print(f'Delay: {delay}')
+            print(f'{idx}: Delay: {delay}')
+            idx += 1
 
 if __name__ == '__main__':
     main()
