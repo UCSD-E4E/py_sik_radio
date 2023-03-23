@@ -34,7 +34,7 @@ def get_test_port() -> Tuple[str, int]:
         Tuple[str, int]: Port, baudrate
     """
     ports = list_ports.comports()
-    port = [port.name for port in ports if port.pid == 0x6015][0]
+    port = [port.device for port in ports if port.pid == 0x6015][0]
     with Serial(port=port) as serial:
         serial.timeout = 1
         for baudrate in baudrates:

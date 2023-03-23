@@ -15,7 +15,7 @@ def main():
     """Configuration script logic
     """
     ports = comports()
-    port_names = [port.name for port in ports if port.pid == 0x6015]
+    port_names = [port.device for port in ports if port.pid == 0x6015]
     parser = argparse.ArgumentParser()
     parser.add_argument('port', type=str, choices=port_names)
     parser.add_argument('--baudrate', type=int, choices=Serial.BAUDRATES, default=57600)

@@ -11,7 +11,7 @@ from py_sik_radio.sik_radio import SikRadio
 def main():
     """Connection server logic
     """
-    ports = [port.name for port in comports() if port.pid == 0x6015]
+    ports = [port.device for port in comports() if port.pid == 0x6015]
     parser = argparse.ArgumentParser()
 
     parser.add_argument('port', type=str, choices=ports)
