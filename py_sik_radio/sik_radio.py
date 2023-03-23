@@ -301,7 +301,7 @@ class SikRadio(Serial):
         """
         return self.__get_command_response('ATI4').strip()
 
-    def get_parameters(self) -> OrderedDict[str, int]:
+    def get_parameters(self) -> "OrderedDict[str, int]":
         """Retrieves all parameters
 
         Returns:
