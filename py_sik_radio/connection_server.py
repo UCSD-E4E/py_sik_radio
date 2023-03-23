@@ -14,13 +14,16 @@ def main():
     ports = [port.device for port in comports() if port.pid == 0x6015]
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('port', type=str, choices=ports)
+    if len(ports) == 1:
+        parser.add_argument('--port', type=str, choices=ports, default=ports[0], required=False)
+    else:
+        parser.add_argument('port', type=str, choices=ports)
     parser.add_argument('--baudrate', type=int, choices=Serial.BAUDRATES, default=57600)
 
     args = parser.parse_args()
 
     with SikRadio(port=args.port, baudrate=args.baudrate) as radio:
-        radio.timeout = 5
+        radio.timeout = 1
         while True:
             radio.write(radio.readline())
 

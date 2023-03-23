@@ -15,20 +15,27 @@ def main():
     ports = [port.device for port in comports() if port.pid == 0x6015]
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('port', type=str, choices=ports)
+    if len(ports) == 1:
+        parser.add_argument('--port', type=str, choices=ports, default=ports[0])
+    else:
+        parser.add_argument('port', type=str, choices=ports)
     parser.add_argument('--baudrate', type=int, choices=Serial.BAUDRATES, default=57600)
 
     args = parser.parse_args()
 
     with SikRadio(port=args.port, baudrate=args.baudrate) as radio:
         idx = 0
+        radio.timeout = 1
         while True:
-            now = dt.datetime.now()
-            radio.write(now.isoformat().encode() + b"\r\n")
-            line = radio.readline()
-            rx_time = dt.datetime.fromisoformat(line.strip().decode())
-            delay = (rx_time - now).total_seconds()
-            print(f'{idx}: Delay: {delay}')
+            try:
+                now = dt.datetime.now()
+                radio.write(now.isoformat().encode() + b"\r\n")
+                line = radio.readline()
+                rx_time = dt.datetime.fromisoformat(line.strip().decode())
+                delay = (rx_time - now).total_seconds()
+                print(f'{idx}: Delay: {delay}')
+            except Exception:
+                print(f'{idx}: Failed to receive data')
             idx += 1
 
 if __name__ == '__main__':
