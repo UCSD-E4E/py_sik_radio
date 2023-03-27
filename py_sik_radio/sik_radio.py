@@ -221,6 +221,8 @@ class _CommandMode:
 #         self.__rtscts = rtscts
 
 class SikRadio(Serial):
+# pylint: disable=too-many-ancestors
+# This is meant to be a wrapper to serial.Serial to enable SiK Radio control
     """SiK Radio Controller
     """
     key_map = {
