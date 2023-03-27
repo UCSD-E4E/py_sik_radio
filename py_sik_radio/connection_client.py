@@ -23,6 +23,9 @@ def main():
 
     args = parser.parse_args()
 
+    avg_delay = 0
+    rx_count = 0
+
     with SikRadio(port=args.port, baudrate=args.baudrate) as radio:
         idx = 0
         radio.timeout = 1
@@ -34,9 +37,17 @@ def main():
                 rx_time = dt.datetime.fromisoformat(line.strip().decode())
                 delay = (rx_time - now).total_seconds()
                 print(f'{idx}: Delay: {delay}')
-            except Exception:
+                rx_count += 1
+                avg_delay += delay
+            except KeyboardInterrupt:
+                break
+            except Exception: # pylint: disable=broad-except
+                # Catching timeout or any other failure
                 print(f'{idx}: Failed to receive data')
             idx += 1
+
+        print(f'Received {rx_count} of {idx} packets ({float(rx_count) / idx * 100:.2f}%)')
+        print(f'Average delay of {avg_delay / rx_count:.2f} s')
 
 if __name__ == '__main__':
     main()
