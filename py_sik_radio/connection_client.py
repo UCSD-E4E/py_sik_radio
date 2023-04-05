@@ -29,7 +29,8 @@ def main():
     with SikRadio(port=args.port, baudrate=args.baudrate) as radio:
         idx = 0
         radio.timeout = 1
-        while True:
+        start_time = dt.datetime.now()
+        while (dt.datetime.now() - start_time).total_seconds() < 60.0:
             try:
                 now = dt.datetime.now()
                 radio.write(now.isoformat().encode() + b"\r\n")
